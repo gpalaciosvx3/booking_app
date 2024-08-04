@@ -1,2 +1,2 @@
 # api_booking
-Api para app de booking
+App de booking
