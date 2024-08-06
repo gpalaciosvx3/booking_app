@@ -5,9 +5,16 @@ import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
 const router = express.Router();
 
 // ENDPOINT'S
+/* create Hotel */
 router.post("/create",verifyAdmin, createHotel);
+
+/* update Hotel */
 router.put("/update/:id",verifyAdmin, updateHotel);
-router.delete("/delete",verifyAdmin, deleteHotel);
+
+/* delete Hotel */
+router.delete("/delete/:id",verifyAdmin, deleteHotel);
+
+/* get Hotel */
 router.get("/get/:id",verifyUser, getHotel);
 router.get("/getall",verifyUser, hotel);
 

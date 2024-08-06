@@ -17,7 +17,7 @@ export const verifyUser = (req, res, next) => {
     verifyToken(req, res, (err) => {
         if (err) return next(err); 
         
-        if (req.user.id !== req.params.id) return next(createError(403, "You are not authorized!")); 
+        if (req.params.id && req.user.id !== req.params.id) return next(createError(403, "You are not authorized!")); 
         next();
     });
 };

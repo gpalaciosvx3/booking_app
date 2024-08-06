@@ -24,6 +24,7 @@ mongoose.connection.on("disconnected", ()=> {
     console.log('mongoDB Disconnected.');
 });
 
+/* MIDEELWARE */
 // Middelware to parse cookie's and json
 app.use(cookieParser());
 app.use(express.json());
@@ -45,6 +46,7 @@ app.use((err,req,res,next) =>{
         stack: err.stack,
     });
 });
+// end of middelware
 
 app.listen(port, () =>{
     connect();
