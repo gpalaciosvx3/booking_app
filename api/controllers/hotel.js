@@ -108,13 +108,12 @@ export const insertFakeHotels = async (req, res, next) => {
                     usedRooms.add(room);
                     return room;
                 });
-                console.log(randomRooms);
                 
             }
 
             const newHotel = new Hotel({
                 name: faker.company.name(),
-                type: faker.helpers.arrayElement(['hotel', 'apartment', 'resort', 'villa']),
+                type: faker.helpers.arrayElement(['Hotels', 'Apartments', 'Resorts', 'Villas', 'Cabins']),
                 city: faker.helpers.arrayElement(famousCities), // Usar ciudades famosas desde constants.js
                 address: faker.location.streetAddress(),
                 distance: `${faker.number.int({ min: 100, max: 2000 })}m`,
@@ -142,15 +141,61 @@ export const insertFakeHotels = async (req, res, next) => {
 
 // COUNT BY CITIE
 export const countbycitie = async (req,res,next) => {
-    const cities = req.query.cities.split(",");
-    console.log(cities);
-    
+    const cities = req.query.cities.split(",");    
     try {
-        const list = await Promise.all(cities.map(city =>{
-            return Hotel.countDocuments({ city: { $regex: new RegExp(city, 'i') } }); // no diferatation between caps and not caps
-        }))
+        const list = await Promise.all(
+            cities.map(async (city) => {
+                const count = await Hotel.countDocuments({ city: { $regex: new RegExp(city, 'i') } });
+                const hotel = await Hotel.findOne({ city: { $regex: new RegExp(city, 'i') } }).select("photos");
+                const randomPhoto = hotel ? hotel.photos[Math.floor(Math.random() * hotel.photos.length)] : null;
+                return {
+                    city: city,
+                    count: count,
+                    image: randomPhoto
+                };
+            })
+        );
 
-        res.status(200).json(list);
+        const result = list.reduce((acc, curr) => {
+            acc[curr.city] = {
+                cantidad: curr.count,
+                imagen: curr.image
+            };
+            return acc;
+        }, {});
+
+        res.status(200).json(result);
+    } catch (err) {
+        // Manejar errores
+        next(err);
+    }
+}
+
+export const countbytype = async (req,res,next) => {
+    const cities = req.query.cities.split(",");    
+    try {
+        const list = await Promise.all(
+            cities.map(async (type) => {
+                const count = await Hotel.countDocuments({ type: { $regex: new RegExp(type, 'i') } });
+                const hotel = await Hotel.findOne({ type: { $regex: new RegExp(type, 'i') } }).select("photos");
+                const randomPhoto = hotel ? hotel.photos[Math.floor(Math.random() * hotel.photos.length)] : null;
+                return {
+                    type: type,
+                    count: count,
+                    image: randomPhoto
+                };
+            })
+        );
+
+        const result = list.reduce((acc, curr) => {
+            acc[curr.type] = {
+                cantidad: curr.count,
+                imagen: curr.image
+            };
+            return acc;
+        }, {});
+
+        res.status(200).json(result);
     } catch (err) {
         // Manejar errores
         next(err);

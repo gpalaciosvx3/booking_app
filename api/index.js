@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import swaggerUi from 'swagger-ui-express'; // Importar swagger-ui-express
 import swaggerSpec from './utils/swaggerDocs.js'; // Importar la especificación de Swagger
+import cors from "cors"
 // Routes defination
 import authRoute from "./routes/auth.js"
 import usersRoute from "./routes/users.js"
@@ -28,6 +29,7 @@ mongoose.connection.on("disconnected", ()=> {
 
 /* MIDEELWARE */
 // Middelware to parse cookie's and json
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 

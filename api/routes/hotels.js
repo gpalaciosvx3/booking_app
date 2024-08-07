@@ -1,6 +1,6 @@
 import express from "express";
 import { 
-    countbycitie, createHotel, deleteAllHotels,
+    countbycitie, countbytype, createHotel, deleteAllHotels,
     deleteHotel, getHotel, hotel,
     insertFakeHotels, updateHotel } from "../controllers/hotel.js";
 import { verifyAdmin, verifyUser } from "../utils/verifyToken.js";
@@ -26,5 +26,6 @@ router.delete("/deleteall",verifyAdmin, deleteAllHotels );
 
 /* count's Hotel */
 router.get("/countbycitie",verifyUser, countbycitie);
+router.get("/countbytype",verifyUser, countbytype);
 
 export default router
