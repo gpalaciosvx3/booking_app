@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import swaggerUi from 'swagger-ui-express'; // Importar swagger-ui-express
+import swaggerSpec from './utils/swaggerDocs.js'; // Importar la especificación de Swagger
 // Routes defination
 import authRoute from "./routes/auth.js"
 import usersRoute from "./routes/users.js"
@@ -29,6 +31,9 @@ mongoose.connection.on("disconnected", ()=> {
 app.use(cookieParser());
 app.use(express.json());
 
+/* SWAGGER - DOCUMENTATION */
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // My own routes middelware
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
@@ -50,6 +55,5 @@ app.use((err,req,res,next) =>{
 
 app.listen(port, () =>{
     connect();
-    console.log('Connected to backend!');
-    
+    console.log(`Connected to backend at port ${port}`);
 });

@@ -61,6 +61,17 @@ export const deleteRoom = async (req,res,next) => {
     }
  }
 
+ // Dellete All Rooms
+export const deleteAllRooms = async (req, res, next) => {
+    try {
+        await Room.deleteMany();
+        await Hotel.updateMany({}, { $unset: { rooms: "" } });
+        res.status(200).json('All rooms and their references in hotels have been deleted.');
+    } catch (err) {
+        next(err);
+    }
+};
+
 // GET
 export const getRoom = async (req,res,next) => {
     const getRoom = await Room.findById(
@@ -141,13 +152,3 @@ export const insertFakeRooms = async (req, res, next) => {
     }
 };
 
-// Dellete All Rooms
-export const deleteAllRooms = async (req, res, next) => {
-    try {
-        await Room.deleteMany();
-        await Hotel.updateMany({}, { $unset: { rooms: "" } });
-        res.status(200).json('All rooms and their references in hotels have been deleted.');
-    } catch (err) {
-        next(err);
-    }
-};
